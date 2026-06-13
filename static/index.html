@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2Z Summarizer | AI Powered</title>
+    <meta name="description" content="AI powered text summarizer supporting text, PDFs, Word docs and Web URLs.">
+    <!-- Google Fonts: Inter and Space Grotesk -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Boxicons for icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-glow blob-1"></div>
+    <div class="bg-glow blob-2"></div>
+    
+    <main class="container">
+        <header>
+            <h1 class="logo"><i class='bx bx-brain'></i> A2Z <span>Summarizer</span></h1>
+            <p class="subtitle">Condense hours of reading into seconds using advanced AI algorithms.</p>
+        </header>
+
+        <section class="glass-panel app-body">
+            
+            <div class="controls-bar">
+                <div class="control-group">
+                    <label for="algo-select"><i class='bx bx-cog'></i> Algorithm</label>
+                    <div class="custom-select">
+                        <select id="algo-select">
+                            <option value="LSA">LSA (Latent Semantic Analysis)</option>
+                            <option value="LexRank">LexRank</option>
+                            <option value="Luhn">Luhn</option>
+                            <option value="TextRank">TextRank</option>
+                        </select>
+                        <i class='bx bx-chevron-down drop-icon'></i>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="sentence-slider"><i class='bx bx-text'></i> Length: <span id="sentence-val">3</span> Sentences</label>
+                    <input type="range" id="sentence-slider" min="1" max="15" value="3" class="slider">
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-target="tab-text"><i class='bx bx-edit-alt'></i> Text</button>
+                <button class="tab-btn" data-target="tab-file"><i class='bx bxs-file-pdf'></i> Document</button>
+                <button class="tab-btn" data-target="tab-url"><i class='bx bx-globe'></i> URL</button>
+            </div>
+
+            <div class="tab-content active" id="tab-text">
+                <textarea id="input-text" placeholder="Paste your lengthy text here..." spellcheck="false"></textarea>
+            </div>
+
+            <div class="tab-content" id="tab-file">
+                <div class="file-drop-zone" id="drop-zone">
+                    <i class='bx bx-cloud-upload'></i>
+                    <h3>Drag & Drop your file here</h3>
+                    <p>Supports .PDF and .DOCX</p>
+                    <input type="file" id="file-input" accept=".pdf,.docx" hidden>
+                    <button class="btn-outline" onclick="document.getElementById('file-input').click()">Browse Files</button>
+                    <div id="file-name-display" class="file-name-display hidden"></div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-url">
+                <div class="url-input-container">
+                    <i class='bx bx-link'></i>
+                    <input type="url" id="input-url" placeholder="https://example.com/article">
+                </div>
+            </div>
+
+            <button id="summarize-btn" class="btn-primary">
+                <span>Summarize Now</span> <i class='bx bx-right-arrow-alt'></i>
+            </button>
+        </section>
+
+        <!-- Loading State -->
+        <div id="loading-state" class="hidden">
+            <div class="spinner"></div>
+            <p>Analyzing text semantics...</p>
+        </div>
+
+        <!-- Result Section -->
+        <section id="result-section" class="glass-panel result-panel hidden">
+            <div class="result-header">
+                <h2><i class='bx bx-check-circle'></i> Summary Generated</h2>
+                <div class="action-buttons">
+                    <button id="btn-audio" class="icon-btn tooltip" data-tooltip="Listen"><i class='bx bx-volume-full'></i></button>
+                    <button id="btn-copy" class="icon-btn tooltip" data-tooltip="Copy"><i class='bx bx-copy'></i></button>
+                    <button id="btn-download" class="icon-btn tooltip" data-tooltip="Download .txt"><i class='bx bx-download'></i></button>
+                </div>
+            </div>
+            
+            <div class="summary-content" id="summary-text">
+                <!-- Summary goes here -->
+            </div>
+
+            <div class="tags-container" id="keywords-container">
+                <!-- <span class="tag">Keyword</span> -->
+            </div>
+
+            <div class="analytics">
+                <div class="stat-card">
+                    <i class='bx bx-time-five'></i>
+                    <div class="stat-info">
+                        <h4>Reading Time Saved</h4>
+                        <p id="stat-time">0 secs</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class='bx bx-bar-chart-alt-2'></i>
+                    <div class="stat-info">
+                        <h4>Compression Ratio</h4>
+                        <p id="stat-ratio">0%</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

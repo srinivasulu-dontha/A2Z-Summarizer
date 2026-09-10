@@ -7,7 +7,7 @@ from sumy.summarizers.luhn import LuhnSummarizer
 from sumy.summarizers.text_rank import TextRankSummarizer
 import PyPDF2
 import docx
-from newspaper import Article, ArticleException
+from newspaper import Article
 from rake_nltk import Rake
 
 def read_pdf(file_bytes):

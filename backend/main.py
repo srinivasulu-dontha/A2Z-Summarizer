@@ -16,6 +16,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+FRONTEND_URL = "https://a2-z-summarizer.vercel.app"
+
 class TextRequest(BaseModel):
     text: str
     algo: str = "LSA"
@@ -66,7 +68,7 @@ async def summarize_url_endpoint(req: UrlRequest):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-app.get("/")
+@app.get("/")
 async def root():
     return {"message": "Welcome to the A2Z Summarizer API!"}
 

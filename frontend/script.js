@@ -1,3 +1,5 @@
+const API_BASE_URL = "http://localhost:8000";
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- UI Elements ---
     const tabBtns = document.querySelectorAll('.tab-btn');
@@ -5,15 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const sentenceSlider = document.getElementById('sentence-slider');
     const sentenceVal = document.getElementById('sentence-val');
     const algoSelect = document.getElementById('algo-select');
-    
+
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const fileNameDisplay = document.getElementById('file-name-display');
-    
+
     const summarizeBtn = document.getElementById('summarize-btn');
     const loadingState = document.getElementById('loading-state');
     const resultSection = document.getElementById('result-section');
-    
+
     const summaryTextEl = document.getElementById('summary-text');
     const keywordsContainer = document.getElementById('keywords-container');
     const statTimeEl = document.getElementById('stat-time');
@@ -32,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
             tabBtns.forEach(b => b.classList.remove('active'));
             tabContents.forEach(c => c.classList.remove('active'));
-            
+
             btn.classList.add('active');
             currentTab = btn.getAttribute('data-target');
             document.getElementById(currentTab).classList.add('active');
@@ -84,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     summarizeBtn.addEventListener('click', async () => {
         const algo = algoSelect.value;
         const numSentences = sentenceSlider.value;
-        
+
         let endpoint = "";
         let body = null;
         let isFormData = false;
@@ -92,25 +94,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentTab === 'tab-text') {
             const text = document.getElementById('input-text').value.trim();
             if (!text) return alert("Please enter some text to summarize.");
-            
-            endpoint = "/api/summarize/text";
+
+            endpoint = `${API_BASE_URL}/api/summarize/text`;
             body = JSON.stringify({ text, algo, num_sentences: parseInt(numSentences) });
-        } 
+        }
         else if (currentTab === 'tab-file') {
             if (!selectedFile) return alert("Please upload a file.");
-            
-            endpoint = "/api/summarize/file";
+
+            endpoint = `${API_BASE_URL}/api/summarize/file`;
             body = new FormData();
             body.append('file', selectedFile);
             body.append('algo', algo);
             body.append('num_sentences', parseInt(numSentences));
             isFormData = true;
-        } 
+        }
         else if (currentTab === 'tab-url') {
             const url = document.getElementById('input-url').value.trim();
             if (!url) return alert("Please enter a valid URL.");
-            
-            endpoint = "/api/summarize/url";
+
+            endpoint = `${API_BASE_URL}/api/summarize/url`;
             body = JSON.stringify({ url, algo, num_sentences: parseInt(numSentences) });
         }
 
@@ -147,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayResult(data) {
         currentSummaryText = data.summary;
         summaryTextEl.textContent = data.summary;
-        
+
         // Tags
         keywordsContainer.innerHTML = "";
         if (data.keywords && data.keywords.length > 0) {
@@ -170,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Action Buttons ---
-    
+
     // Copy
     btnCopy.addEventListener('click', () => {
         if (!currentSummaryText) return;
@@ -200,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isSpeaking = false;
     btnAudio.addEventListener('click', () => {
         if (!currentSummaryText) return;
-        
+
         const icon = btnAudio.querySelector('i');
 
         if (isSpeaking) {
@@ -212,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const utterance = new SpeechSynthesisUtterance(currentSummaryText);
         utterance.rate = 1.0;
-        
+
         utterance.onend = () => {
             isSpeaking = false;
             icon.className = 'bx bx-volume-full';

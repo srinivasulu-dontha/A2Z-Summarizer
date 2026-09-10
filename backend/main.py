@@ -1,14 +1,13 @@
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import uvicorn
 
-from backend.summarizer import process_text, read_pdf, read_docx, read_url
+from summarizer import process_text, read_pdf, read_docx, read_url
 
 app = FastAPI(title="A2Z Summarizer API")
 
-# Add CORS middleware if needed
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -44,7 +43,7 @@ async def summarize_file(
     try:
         content = await file.read()
         filename = file.filename.lower()
-        
+
         text = ""
         if filename.endswith(".pdf"):
             text = read_pdf(content)
@@ -52,7 +51,7 @@ async def summarize_file(
             text = read_docx(content)
         else:
             raise HTTPException(status_code=400, detail="Unsupported file format. Please upload PDF or DOCX.")
-            
+
         result = process_text(text, algo, num_sentences)
         return result
     except Exception as e:
@@ -66,9 +65,6 @@ async def summarize_url_endpoint(req: UrlRequest):
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
-# Mount static files to serve the frontend
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
